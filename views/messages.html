@@ -1,0 +1,140 @@
+<link rel="stylesheet" type="text/css" href="/css/messages.css"/>
+
+<section id="roomList"><ul><% for (let room of roomList) { %>
+	<li><label num="<%= room.room_num %>">
+		<span class="avatar" style="background-image: url(<%= imgdir %>/<%= room.User.avatar %>)"></span>
+		<span class="id"><%= room.User.id %></span>
+		<button type="button" onclick="room_open(<%= room.room_num %>)" hidden></button>
+	</label></li>
+<% } %></ul></section>
+
+<section id="chatting">
+	<ul></ul>
+	<form id="chatForm">
+		<textarea name="message" placeholder="Message..." onkeydown="f_comment_onkeydown(this, event);" onkeyup="f_comment_onkeyup(this, event);"></textarea>
+		<label>Send<button type="submit" hidden></button></label>
+	</form>
+</section>
+
+<script type="text/javascript">
+	const ul = chatting.querySelector("ul");
+	let load = true;
+
+	const room_open = async function(num) {
+		room_close();
+		if (location.pathname == "/messages/") {
+			history.pushState(null, null, "/messages/" + num);
+		} else {
+			history.replaceState(null, null, "/messages/" + num);
+		}
+		roomList.classList.add("hide");
+		chatting.setAttribute("num", num);
+		document.querySelector(`label[num='${num}']`).classList.add("select");
+		headerButton({type: "prev", onclick: 'history.back();'});
+		load = await load_chat({room_num: num});
+		document.querySelector("#page-title").innerText = document.querySelector(`label[num='${num}']`).innerText.trim();
+	}
+
+	const load_chat = async function({num, room_num}) {
+		const {data} = await axios.post("/messages/load", {num, room_num});
+		socket.emit("join", {name: data.name});
+		for (let chat of data.chatting) newMessage(chat);
+		return data.chatting.length == 0;
+	}
+
+	const room_close = function() {
+		header.querySelector(".prev")?.remove();
+		roomList.classList.remove("hide");
+		document.querySelector("#page-title").innerText = "Messages";
+		ul.innerHTML = "";
+		for (let x of document.querySelectorAll(`label[num]`)) x.classList.remove("select");
+	}
+
+	const newMessage = function(chat, rev = false) {
+		if (ul.parentNode.getAttribute("num") != chat.room_num) return;
+
+		const li = document.createElement("li");
+		li.innerHTML =
+			"<div class='avatar-wrapper'><a class='avatar'></a></div>"+
+			"<div class='message'>"+
+				"<a class='id'></a>"+
+				"<p class='content'></p>"+
+				"<span class='date'></span>"+
+			"</div>";
+		li.querySelector(".avatar").style.backgroundImage = `url(${imgdir}/${chat.User.avatar})`;
+		li.querySelector(".avatar").href = "/" + chat.User.id;
+		li.querySelector(".message").setAttribute("num", chat.num);
+		li.querySelector(".id").innerText = chat.User.id;
+		li.querySelector(".id").href = "/" + chat.User.id;
+		if (chat.user_num == user_num) li.classList.add("send");
+		li.querySelector(".content").innerText = chat.message;
+		li.querySelector(".date").innerText = dateFormat(chat.createdAt);
+		if (rev) {
+			ul.prepend(li);
+		} else {
+			ul.append(li);
+		}
+	}
+
+
+
+
+
+	let keys = [];
+	const f_comment_onkeydown = function(elem, e) {
+		keys[e.keyCode] = true;
+		if (e.key == "Enter" && e.code != "Enter") {
+			// mobile
+		} else if (e.keyCode == 13 && !keys[16]) {
+			e.preventDefault();
+			if (elem.value.trim()) f_submit(elem);
+		}
+	}
+	const f_comment_onkeyup = function(elem, e) {
+		keys[e.keyCode] = false;
+		f_textarea(chatForm.message);
+	}
+
+	const f_submit = async function(area) {
+		const message = area.value.trim();
+		if (!message) return;
+
+		area.value = "";
+		const room_num = chatting.getAttribute("num");
+		const {data} = await axios.post("/messages/msg", {message, room_num});
+		socket.emit("newMessage", data);
+	}
+
+
+
+	chatForm.addEventListener("submit", function(e) {
+		e.preventDefault();
+		f_submit(this.message);
+	});
+
+	socket.on("newMessage", (data) => {
+		newMessage(data, true);
+	});
+
+	ul.addEventListener("scroll", async function(e) {
+		if (this.scrollHeight <= Math.round(this.scrollTop*-1 + this.clientHeight)) {
+			load = true;
+			const arr = ul.querySelectorAll(".message");
+			load = await load_chat({
+				num: arr[arr.length-1].getAttribute("num"),
+				room_num: ul.parentNode.getAttribute("num"),
+			});
+		}
+	});
+
+	window.addEventListener("popstate", function() {
+		console.log(location.pathname);
+		if (location.pathname == "/messages/") {
+			room_close();
+		}
+	});
+
+
+
+	<% if (room_num) { %>room_open(<%= room_num %>)<% } %>
+</script>

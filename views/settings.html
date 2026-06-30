@@ -1,0 +1,50 @@
+<link rel="stylesheet" type="text/css" href="/css/settings.css"/>
+<ul id="settings">
+	<li id="mode-toggle" class="item">
+		<span class="text" title="Dark Mode On/Off">Dark mode</span>
+		<button id="modeBtn" title="Dark Mode On/Off" type="button" role="switch" aria-checked="auto" onclick="f_modeToggle();"></button>
+	</li>
+	<li class="item">
+		<span class="text" title="Following's New Post Notification">New post notification</span>
+		<button id="newPost" title="Following's New Post Notification" type="button" role="switch" aria-checked="auto" onclick="f_newPost();"></button>
+	</li>
+	<li>
+		<label>Logout<button type="button" onclick="location.replace('/logout');" hidden></button></label>
+		<label class="danger">Delete account<button type="button" onclick="f_delete();" hidden></button></label>
+	</li>
+</ul>
+
+
+<script type="text/javascript">
+	const check = function(btn, name) {
+		let toggle = btn.getAttribute("aria-checked") != "true";
+		btn.setAttribute("aria-checked", toggle);
+		localStorage[name] = toggle;
+		return toggle;
+	}
+
+	modeBtn.setAttribute("aria-checked", html.getAttribute("darkmode"));
+	const f_modeToggle = function() {
+		const mode = check(modeBtn, "darkmode");
+		html.setAttribute("darkmode", mode);
+	}
+
+	newPost.setAttribute("aria-checked", localStorage.newPost || true);
+	const f_newPost = function() {
+		check(newPost, "newPost");
+	}
+
+
+
+	const f_delete = async function() {
+		const pw = prompt("If you enter your password, your account will be deleted.");
+		if (!pw) return;
+		try {
+			await axios.delete("/delete", {data: {pw}});
+			location.replace("/");
+		} catch(err) {
+			let {message} = err.response.data;
+			if (message) f_msgbox({type: "error", message});
+		}
+	}
+</script>

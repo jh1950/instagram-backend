@@ -1,0 +1,16 @@
+<link rel="stylesheet" type="text/css" href="/css/upload.css"/>
+<form id="uploadForm" enctype="multipart/form-data">
+	<div id="preview">
+		<label>
+			<svg viewBox="0 0 64 64"><use href="#svg-upload"/></svg>
+			<input id="input" type="file" name="images" accept="image/*" multiple onchange="preview(event.target.files);" hidden/>
+		</label>
+		<ul></ul>
+	</div>
+	<textarea name="content" placeholder="Content" onkeyup="f_uploadLeave(this);"></textarea>
+</form>
+<script type="text/javascript">
+	const uploadLimit = <%= uploadLimit %>;
+	const uploadSize = <%= uploadSize %>;
+</script>
+<script type="text/javascript" src="/js/upload.js"></script>

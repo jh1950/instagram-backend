@@ -1,0 +1,21 @@
+{
+  "development": {
+    "storage": "./db.sqlite",
+    "dialect": "sqlite",
+    "logging": false
+  },
+  "test": {
+    "username": "node",
+    "password": "1234",
+    "database": "nodejs",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "node",
+    "password": "1234",
+    "database": "nodejs",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

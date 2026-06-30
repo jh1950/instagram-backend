@@ -1,0 +1,41 @@
+<link rel="stylesheet" type="text/css" href="/css/user.css"/>
+<link rel="stylesheet" type="text/css" href="/css/profile.css"/>
+
+<form id="user">
+	<div>
+		<label class="avatar" style="background-image: url(<%= imgdir %>/<%= avatar %>)">
+			<input type="file" name="avatar" accept="image/*" onchange="avatarUpdate(event);" hidden/>
+		</label>
+		<div>
+			<input type="text" name="id" value="<%= user.id %>" placeholder="ID"/>
+			<input type="text" name="name" value="<%= user.name %>" placeholder="Name"/>
+		</div>
+	</div>
+	<textarea type="text" name="bio" onkeyup="f_textarea(this);" placeholder="Bio"><%= user.bio %></textarea>
+</form>
+
+<script>
+const submit = document.createElement("button");
+submit.type = "submit";
+submit.setAttribute("form", "user");
+headerButton({type: "next", elem: submit});
+headerButton({type: "prev"});
+
+user.addEventListener("submit", async function(e) {
+	e.preventDefault();
+	const {id, name, bio} = e.target;
+
+	try {
+		const {data} = await axios.put("/edit", {
+			id: id.value.trim(),
+			name: name.value.trim(),
+			bio: bio.value.trim(),
+		});
+		location.replace("/" + data.id);
+	} catch(err) {
+		const {focus, message} = err.response.data;
+		if (message) f_msgbox({type: "error", message});
+		if (focus) user[focus].focus();
+	}
+});
+</script>

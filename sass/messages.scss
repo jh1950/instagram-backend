@@ -1,0 +1,165 @@
+html, body, main {
+	height: 100%;
+} main {
+	margin: 0;
+	padding: 0;
+	width: auto;
+	max-width: none;
+
+	display: flex;
+} section {
+	--height: 2.5rem;
+}
+
+
+
+#roomList {
+	padding: var(--gap-2) 0;
+	width: 100%;
+	overflow: hidden auto;
+
+	&.hide {
+		display: none;
+
+		& + #chatting {
+			display: flex;
+
+			ul:empty {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				&:before {
+					content: "There are no messages.";
+					font-size: 1.25em;
+				}
+			}
+		}
+	}
+
+	ul {
+		list-style: none;
+
+		&:empty {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+
+			&:before {
+				content: "Empty";
+				font-weight: bold;
+				font-size: 1.25em;
+			}
+		}
+	} li {
+		border-bottom: 1px solid var(--bd-color);
+	} label {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: var(--gap);
+		padding: var(--gap-2);
+		font-size: 1.15em;
+		font-weight: bold;
+		cursor: pointer;
+
+		&.select:before {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 0;
+			height: 100%;
+			border-left: 1px solid var(--theme-color);
+		}
+	}
+} #chatting {
+	display: none;
+	flex-direction: column;
+	width: 100%;
+
+	form {
+		border-top: 1px solid var(--bd-color);
+		display: flex;
+
+		label {
+			background-color: var(--sub-bg-color);
+			border-left: 1px solid var(--bd-color);
+			display: flex;
+			align-items: center;
+			padding: 0 var(--gap-2);
+			cursor: pointer;
+			transition: .1s color;
+
+			&:hover {
+				color: var(--theme-color);
+			}
+		} textarea {
+			flex: 1;
+			outline: none;
+			border: 0;
+			padding: var(--gap-2);
+			min-height: 3rem;
+			max-height: 10rem;
+			width: 100%;
+			resize: none;
+		}
+	} ul {
+		flex: 1;
+		display: flex;
+		flex-direction: column-reverse;
+		overflow: hidden auto;
+	} li {
+		display: flex;
+		gap: var(--gap-2);
+		margin-bottom: var(--gap);
+		padding: 0 var(--gap-2);
+
+		&.send {
+			text-align: right;
+			justify-content: flex-end;
+
+			.avatar-wrapper, .id {
+				display: none;
+			} .message {
+				align-items: flex-end;
+			}
+		}
+
+		.message {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			max-width: 70%;
+		} .id {
+			font-weight: bold;
+		} .content {
+			background-color: var(--sub-bg-color);
+			border: 1px solid var(--bd-color);
+			border-radius: .5em;
+			margin: var(--gap-2) 0;
+			padding: var(--gap-2);
+		} .date {
+			color: var(--sub-color);
+		}
+	}
+}
+
+
+
+@media (min-width: 1024px) {
+	#roomList {
+		display: block !important;
+		border-right: 1px solid var(--bd-color);
+		width: var(--nav-width);
+	} #chatting {
+		display: flex !important;
+		flex: 1;
+
+		li {
+			padding: 0 var(--gap);
+		}
+	}
+}

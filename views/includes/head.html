@@ -1,0 +1,23 @@
+<title><% if (page_title && page_title.toLowerCase() != "home") { %><%= page_title %> | <% } %><%= site_title %></title>
+<meta charset="utf8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
+<link rel="stylesheet" type="text/css" href="/css/scrollbar.css"/>
+<link rel="stylesheet" type="text/css" href="/css/variables.css"/>
+<link rel="stylesheet" type="text/css" href="/css/index.css"/>
+<link rel="stylesheet" type="text/css" href="/css/msgbox.css"/>
+<link rel="stylesheet" type="text/css" href="/css/mode-toggle.css"/>
+<% if (login) { %>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		const imgdir = "<%= imgdir %>";
+		const user_num = <%= user_num %>;
+
+		const socket = io();
+		socket.on("newPost", (users) => {
+			if (users.includes(user_num) && localStorage.newPost != "false") f_msgbox({type: "normal", message: "A new post has been uploaded."});
+		});
+	</script>
+<% } %>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/js/index.js"></script>

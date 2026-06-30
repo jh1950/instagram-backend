@@ -1,0 +1,41 @@
+<link rel="stylesheet" type="text/css" href="/css/login.css"/>
+<form id="loginForm" method="post">
+	<% if (titles[0] == "Register") { %><input name="email" type="email" placeholder="E-mail" required autocomplete="off"/><% } %>
+	<input name="id" type="text" placeholder="ID" required autocomplete="off"/>
+	<% if (titles[0] == "Register") { %><input name="username" type="text" placeholder="Name" required autocomplete="off"/><% } %>
+	<input name="pw" type="password" placeholder="Password" required/>
+	<% if (titles[0] == "Register") { %><input name="pwc" type="password" placeholder="Password Confirm" required/><% } %>
+	<div>
+		<button type="button" onclick="location.replace('/<%= titles[1].toLowerCase() %>')"><%= titles[1] %></button>
+		<button type="submit">Submit</button>
+	</div>
+</form>
+<script type="text/javascript">
+	const remove_error = function(e) {
+		e.target.classList.remove("error");
+	}
+
+	for (let input of loginForm.querySelectorAll("input")) {
+		input.addEventListener("focus", remove_error);
+		input.addEventListener("click", remove_error);
+	}
+
+	loginForm.addEventListener("submit", async function(e) {
+		e.preventDefault();
+		try {
+			const {email, id, username, pw, pwc} = loginForm;
+			await axios.post(location.pathname, {
+				email: email?.value.trim(),
+				id: id.value.trim(),
+				name: username?.value.trim(),
+				pw: pw.value.trim(),
+				pwc: pwc?.value.trim()
+			});
+			location.replace("/");
+		} catch(err) {
+			let {message, focus} = err.response.data;
+			if (focus) document.querySelector(`[name="${focus}"]`).focus();
+			if (message) f_msgbox({type: "error", message});
+		}
+	});
+</script>

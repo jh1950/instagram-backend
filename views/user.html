@@ -1,0 +1,92 @@
+<link rel="stylesheet" type="text/css" href="/css/user.css"/>
+<% const myPage = userid == pathname.slice(1); %>
+<section id="user">
+	<label class="avatar<% if (myPage) { %> pointer<% } %>" style="background-image: url(<%= imgdir %>/<%= user.avatar %>)">
+		<% if (myPage) { %><input type="file" name="avatar" accept="image/*" onchange="avatarUpdate(event);" hidden/><% } %>
+	</label>
+	<div>
+		<span class="number"><%= posts || 0 %></span>
+		<span class="text">Posts</span>
+	</div>
+	<div id="follower">
+		<label class="number"><%= follow.er %><button type="button" onclick="f_followList('er');" hidden></button></label>
+		<label class="text">Followers<button type="button" onclick="f_followList('er');" hidden></button></label>
+	</div>
+	<div id="following">
+		<label class="number"><%= follow.ing %><button type="button" onclick="f_followList('ing');" hidden></button></label>
+		<label class="text">Following<button type="button" onclick="f_followList('ing');" hidden></button></label>
+	</div>
+</section>
+<section id="user-info">
+	<p id="username"></p>
+	<p id="bio"></p>
+	<div class="btnbox"><% if (myPage) { %>
+		<label>Edit Profile<button type="button" onclick="location.href = '/edit';" hidden></button></label>
+		<label>Share Profile<button type="button" onclick="f_copy(location.href)" hidden></button></label>
+	<% } else { %>
+		<label>
+			<span><% if (follow.follow) { %>Unf<% } else { %>F<% } %>ollow</span>
+			<button type="button" onclick="f_follow(this, <%= user.num %>);" hidden<% if (follow.follow) { %> class="follow"<% } %>></button>
+		</label>
+		<label>Message<button type="button" onclick="f_join(<%= user.num %>);" hidden></button></label>
+	<% } %></div>
+</section>
+<section id="postbox-container"><ul>
+</ul></section>
+
+<script type="text/javascript">
+	const myPage = <%= myPage %>;
+	(function() {
+		username.innerText = `<%= user.name %>`;
+		bio.innerText = `<%= user.bio %>`;
+	})();
+
+	const load_feed = async function(num) {
+		const {data} = await axios.post("/posts/", {num, user_num: <%= user.num %>});
+
+		for (let post of data) {
+			const li = document.createElement("li");
+			li.className = "postbox";
+			li.setAttribute("num", post.num);
+			li.innerHTML = `<a href='/posts/${post.num}' class='backImgbox'></a>`;
+			if (post.Files.length) li.querySelector("a").style.backgroundImage = `url(${imgdir}/${post.Files[0].name})`;
+			document.querySelector("#postbox-container ul").append(li);
+		}
+
+		return data.length == 0;
+	}
+
+	const f_join = async function(num) {
+		const {data} = await axios.post("/messages/join", {num});
+		location.href = "/messages/" + data.room_num;
+	}
+
+
+
+	const f_followList = async function(action) {
+		history.pushState(null, null, location.pathname + "/follow" + action);
+		const {users, arr} = (await axios.post("/follow" + action, {num: <%= user.num %>})).data;
+
+		const section = userList({id: "followList", title: `Follow${action}`, users, arr});
+		section.classList.add(action);
+
+		if (myPage && action == "er") {
+			for (let li of section.querySelectorAll("li")) {
+				li.querySelector("label span").innerText = "Remove";
+				li.querySelector("label button").setAttribute("onclick", `f_remove(this, ${user.num});`);
+			}
+		}
+
+		main.append(section);
+	}
+
+	const f_remove = async function(btn, num) {
+		await axios.post("/unfollow", {num, rev: true});
+		btn.parentNode.remove();
+	}
+
+	window.addEventListener("popstate", function() {
+		close_overlay();
+	});
+</script>
+<script type="text/javascript" src="/js/loadPosts.js"></script>

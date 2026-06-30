@@ -1,0 +1,30 @@
+form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-2);
+
+	& > div {
+		flex-direction: row !important;
+
+		.avatar {
+			float: left;
+		} div {
+			flex: 1;
+
+			input {
+				width: 100%;
+			}
+		}
+	} input, textarea {
+		outline: 0;
+		border: 0px solid var(--bd-color);
+		border-bottom-width: 1px;
+		padding-bottom: var(--gap-4);
+	} textarea {
+		border-width: 1px;
+		padding: var(--gap-4);
+		min-height: 5em;
+		max-height: 15em;
+		resize: none;
+	}
+}

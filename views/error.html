@@ -1,0 +1,15 @@
+<link rel="stylesheet" type="text/css" href="/css/error.css"/>
+<div id="error">
+	<h2>This page does not exist.</h2>
+	<p>After <span class="sec">5</span> seconds, go to the <a href="/">main page</a>.</p>
+</div>
+<script type="text/javascript">
+	const elem = error.querySelector(".sec");
+	const timeout = function() {
+		let sec = parseInt(elem.innerText);
+		if (sec == 0) location.replace("/");
+		else elem.innerText = sec-1;
+		setTimeout(timeout, 1000);
+	}
+	timeout();
+</script>

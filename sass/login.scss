@@ -1,0 +1,31 @@
+body {
+	padding-left: 0;
+} header {
+	width: 100%;
+} form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-2);
+	margin: var(--gap) auto;
+	padding: 0 var(--gap);
+	width: 100%;
+	max-width: 550px;
+
+	input {
+		outline: 0;
+		border: 0;
+		border-bottom: 1px solid var(--bd-color);
+
+		&:focus {
+			border-color: var(--theme-color);
+		} &.error {
+			border-color: var(--error-color);
+		}
+	} input, button {
+		padding: .15em .25em;
+	} div {
+		display: flex;
+		justify-content: space-between;
+		padding-top: var(--gap-2);
+	}
+}

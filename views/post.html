@@ -1,0 +1,26 @@
+<link rel="stylesheet" type="text/css" href="/css/imgbox.css"/>
+<link rel="stylesheet" type="text/css" href="/css/home.css"/>
+<link rel="stylesheet" type="text/css" href="/css/post.css"/>
+<script type="text/javascript" src="/js/postbox.js"></script>
+<script type="text/javascript">
+	let pathname;
+	(async function() {
+		pathname = location.pathname;
+		const {post, comments} = await getPostData(location.pathname.replace("/posts/", ""));
+		const postbox = createPostbox(post);
+		
+		main.append(postbox);
+	})();
+
+	window.addEventListener("popstate", function() {
+		if (pathname == location.pathname) {
+			if (document.querySelector("#post")) {
+				close_post("<%= page_title %>");
+			} else if (document.querySelector(".userList")) {
+				close_overlay();
+			} else {
+				load_post(pathname.replace("/posts/", ""), false);
+			}
+		} else location.reload();
+	});
+</script>

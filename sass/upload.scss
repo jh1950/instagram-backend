@@ -1,0 +1,75 @@
+form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-2);
+	margin: auto;
+	padding: 0 var(--gap-2);
+	width: 100%;
+	max-width: 550px;
+
+	#preview {
+		--height: 3rem;
+
+		display: flex;
+		height: var(--height);
+
+		label {
+			position: relative;
+			padding: .5em;
+			height: var(--height);
+			width: calc(var(--height) + .5em);
+			cursor: pointer;
+
+			&:before {
+				content: "";
+				border-left: 1px solid var(--bd-color);
+				display: block;
+				position: absolute;
+				top: .5em;
+				right: .5em;
+				height: calc(var(--height) - 1em);
+				width: 0;
+			} &:hover {
+				--svg-draw-color: var(--theme-color);
+			}
+		} ul {
+			flex: 1;
+			display: flex;
+			gap: var(--gap-2);
+			list-style: none;
+			overflow: auto hidden;
+
+			&:empty {
+				align-items: center;
+
+				&:before {
+					content: "Select a picture or drag and drop it.";
+					transition: .1s color;
+					font-size: .9em;
+					color: var(--sub-color);
+				}
+			}
+
+			li {
+				flex-shrink: 0;
+			} img {
+				cursor: pointer;
+				height: var(--height);
+			}
+		}
+	} textarea {
+		outline: 0;
+		border: 1px solid var(--bd-color);
+		padding: .25em;
+		height: 20em;
+		resize: none;
+	}
+
+	&.drag {
+		label svg {
+			--svg-draw-color: var(--theme-color);
+		} ul:before {
+			color: var(--theme-color);
+		}
+	}
+}

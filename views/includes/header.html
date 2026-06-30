@@ -1,0 +1,16 @@
+<header id="header">
+	<h1 id="page-title"><%= page_title %></h1>
+</header>
+<script type="text/javascript">
+const headerButton = function({type, elem, onclick}) {
+	if (!elem) {
+		elem = document.createElement("button");
+		elem.type = "button";
+		elem.setAttribute("onclick", onclick || "history.back();");
+	}
+
+	elem.innerHTML = "<svg viewbox='0 0 64 64'><use href='#svg-arrow'/></svg>";
+	elem.classList.add(type);
+	header.append(elem);
+}
+</script>

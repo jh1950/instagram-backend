@@ -1,0 +1,32 @@
+<% if (login) { %><nav><ul>
+	<li><a href="/">
+		<span class="icon"><svg viewBox="0 0 64 64" width="64" height="64"><use href="#svg-home"/></svg></span>
+		<span class="text">Home</span>
+	</a></li>
+<!--
+	<li><a href="/search">
+		<span class="icon"><svg viewBox="0 0 64 64" width="64" height="64"><use href="#svg-search"/></svg></span>
+		<span class="text">Search</span>
+	</a></li
+>-->
+	<li><a href="/posts/upload">
+		<span class="icon"><svg viewBox="0 0 64 64" width="64" height="64"><use href="#svg-upload"/></svg></span>
+		<span class="text">Upload</span>
+	</a></li>
+	<li><a href="/messages/">
+		<span class="icon"><svg viewBox="0 0 24 24" width="64" height="64"><use href="#svg-message"/></svg></span>
+		<span class="text">Messages</span>
+	</a></li>
+	<li><a href="/settings">
+		<span class="icon"><svg viewBox="0 0 64 64" width="64" height="64"><use href="#svg-settings"/></svg></span>
+		<span class="text">Settings</span>
+	</a></li>
+	<li><a href="/<%= userid %>">
+		<span class="icon"><span class="avatar" style="background-image: url(<%= imgdir %>/<%= avatar %>);"></span></span>
+		<span class="text">Profile</span>
+	</a></li>
+</ul>
+<script type="text/javascript">
+	document.querySelector(`nav ul a[href^='/${location.pathname.split("/")[1]}']`)?.classList.add("select");
+</script>
+</nav><% } %>

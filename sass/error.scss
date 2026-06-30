@@ -1,0 +1,17 @@
+main {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+} #error {
+	text-align: center;
+	font-size: 1rem;
+
+	h2 {
+	} a {
+		color: var(--theme-color);
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

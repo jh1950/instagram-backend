@@ -1,0 +1,81 @@
+#settings {
+	--button-height: 1.5rem;
+	--button-width: calc(var(--button-height) * 2);
+	--box-offset: .125em;
+	--box-height: calc(var(--button-height) - var(--box-offset)*2);
+
+	margin: auto;
+	list-style: none;
+	border: 0;
+	padding: 0 var(--gap-2);
+	min-height: var(--button-height);
+
+	li {
+		margin-bottom: var(--gap);
+	} li:not(.item) {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--gap-2) var(--gap);
+
+		label {
+			background-color: var(--sub-bg-color);
+			border: 1px solid var(--bd-color);
+			border-radius: .5em;
+			padding: var(--gap-4);
+			width: 8.5em;
+			text-align: center;
+			cursor: pointer;
+			transition: border-color .1s;
+
+			&.danger {
+				color: var(--danger-color);
+
+				&:hover {
+					border-color: var(--danger-color);
+				}
+			} &:hover {
+				border-color: var(--theme-color);
+			}
+		}
+	} .item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		label, button {
+			cursor: pointer;
+		} button {
+			background-color: var(--sub-bg-color);
+			border: 1px solid var(--bd-color);
+			border-radius: var(--button-height);
+			position: relative;
+			height: var(--button-height);
+			width: var(--button-width);
+			transition: background .5s;
+
+			&:before {
+				content: "";
+				box-sizing: border-box;
+				background-color: var(--white);
+				display: block;
+				border: 1px solid var(--bd-color);
+				border-radius: var(--button-height);
+				position: absolute;
+				top: calc((var(--button-height) - var(--box-height)) / 2 - 1px);
+				left: calc(var(--box-offset) - 1px);
+				height: var(--box-height);
+				width: var(--box-height);
+				transition: left .5s;
+			}
+
+			&[aria-checked="true"] {
+				background-color: var(--theme-bg-color);
+
+				&:before {
+					left: calc(100% - var(--box-height) - var(--box-offset) + 1px);
+				}
+			}
+		}
+	}
+}
